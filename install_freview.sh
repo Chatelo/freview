@@ -133,19 +133,45 @@ install_freview_uv() {
     fi
 }
 
+# Check if we're in a virtual environment that doesn't allow --user installs
+is_user_install_allowed() {
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        # We're in a virtual environment, check if user site-packages are visible
+        if python -c "import site; print(site.ENABLE_USER_SITE)" 2>/dev/null | grep -q "False"; then
+            return 1  # --user installs not allowed
+        fi
+    fi
+    return 0  # --user installs allowed
+}
+
 # Install FReview using pipx (fallback)
 install_freview_pipx() {
     if ! command_exists pipx; then
         print_status "Installing pipx..."
-        if command_exists pip; then
-            pip install --user pipx
-            pipx ensurepath
-        elif command_exists pip3; then
-            pip3 install --user pipx
-            pipx ensurepath
+        
+        # Check if --user installs are allowed
+        if is_user_install_allowed; then
+            if command_exists pip; then
+                pip install --user pipx
+                pipx ensurepath
+            elif command_exists pip3; then
+                pip3 install --user pipx
+                pipx ensurepath
+            else
+                print_error "Neither pip nor pip3 found. Cannot install pipx."
+                return 1
+            fi
         else
-            print_error "Neither pip nor pip3 found. Cannot install pipx."
-            return 1
+            # We're in a venv where --user installs aren't allowed
+            print_warning "Cannot install pipx with --user in this environment. Trying direct install..."
+            if command_exists pip; then
+                pip install pipx
+            elif command_exists pip3; then
+                pip3 install pipx
+            else
+                print_error "Neither pip nor pip3 found. Cannot install pipx."
+                return 1
+            fi
         fi
     fi
     
@@ -177,24 +203,11 @@ install_freview_pip() {
         return 1
     fi
     
-    if $PIP_CMD install --user freview; then
-        print_success "FReview installed successfully with $PIP_CMD"
-        
-        # Add user bin to PATH if not already there
-        USER_BIN="$HOME/.local/bin"
-        if [[ ":$PATH:" != *":$USER_BIN:"* ]]; then
-            export PATH="$USER_BIN:$PATH"
-            print_status "Added $USER_BIN to PATH for this session."
-            
-            # Add to shell profile
-            add_to_shell_profile 'export PATH="$HOME/.local/bin:$PATH"'
-        fi
-        
-        return 0
-    else
-        print_warning "Failed to install from PyPI with $PIP_CMD, trying from source..."
-        if $PIP_CMD install --user git+https://github.com/Chatelo/freview.git; then
-            print_success "FReview installed successfully from source"
+    # Check if --user installs are allowed
+    if is_user_install_allowed; then
+        # Try --user install first
+        if $PIP_CMD install --user freview; then
+            print_success "FReview installed successfully with $PIP_CMD"
             
             # Add user bin to PATH if not already there
             USER_BIN="$HOME/.local/bin"
@@ -208,8 +221,41 @@ install_freview_pip() {
             
             return 0
         else
-            print_error "Failed to install FReview with $PIP_CMD"
-            return 1
+            print_warning "Failed to install from PyPI with $PIP_CMD --user, trying from source..."
+            if $PIP_CMD install --user git+https://github.com/Chatelo/freview.git; then
+                print_success "FReview installed successfully from source"
+                
+                # Add user bin to PATH if not already there
+                USER_BIN="$HOME/.local/bin"
+                if [[ ":$PATH:" != *":$USER_BIN:"* ]]; then
+                    export PATH="$USER_BIN:$PATH"
+                    print_status "Added $USER_BIN to PATH for this session."
+                    
+                    # Add to shell profile
+                    add_to_shell_profile 'export PATH="$HOME/.local/bin:$PATH"'
+                fi
+                
+                return 0
+            else
+                print_error "Failed to install FReview with $PIP_CMD --user"
+                return 1
+            fi
+        fi
+    else
+        # We're in a venv where --user installs aren't allowed, try direct install
+        print_status "Virtual environment detected, installing directly..."
+        if $PIP_CMD install freview; then
+            print_success "FReview installed successfully with $PIP_CMD"
+            return 0
+        else
+            print_warning "Failed to install from PyPI with $PIP_CMD, trying from source..."
+            if $PIP_CMD install git+https://github.com/Chatelo/freview.git; then
+                print_success "FReview installed successfully from source"
+                return 0
+            else
+                print_error "Failed to install FReview with $PIP_CMD"
+                return 1
+            fi
         fi
     fi
 }
@@ -223,12 +269,23 @@ verify_installation() {
     
     # Try to find freview in common locations
     FREVIEW_PATH=""
-    for path in "$HOME/.local/bin/freview" "$HOME/.cargo/bin/freview" "/usr/local/bin/freview" "$(which freview 2>/dev/null)"; do
-        if [[ -x "$path" ]]; then
-            FREVIEW_PATH="$path"
-            break
+    
+    # Check virtual environment bin first if we're in one
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        if [[ -x "$VIRTUAL_ENV/bin/freview" ]]; then
+            FREVIEW_PATH="$VIRTUAL_ENV/bin/freview"
         fi
-    done
+    fi
+    
+    # Check other common locations if not found in venv
+    if [[ -z "$FREVIEW_PATH" ]]; then
+        for path in "$HOME/.local/share/uv/tools/bin/freview" "$HOME/.local/bin/freview" "$HOME/.cargo/bin/freview" "/usr/local/bin/freview" "$(which freview 2>/dev/null)"; do
+            if [[ -x "$path" ]]; then
+                FREVIEW_PATH="$path"
+                break
+            fi
+        done
+    fi
     
     if [[ -n "$FREVIEW_PATH" ]]; then
         print_success "FReview found at: $FREVIEW_PATH"
@@ -316,9 +373,19 @@ main() {
     fi
     
     print_error "All installation methods failed. Please install manually:"
-    echo "1. Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh"
-    echo "2. Install FReview: uv tool install freview"
-    echo "3. Or use pip: pip install --user freview"
+    echo
+    echo "If you're in a virtual environment:"
+    echo "  pip install freview"
+    echo "  # or from source:"
+    echo "  pip install git+https://github.com/Chatelo/freview.git"
+    echo
+    echo "If you're not in a virtual environment:"
+    echo "  1. Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh"
+    echo "  2. Install FReview: uv tool install freview"
+    echo "  3. Or use pip: pip install --user freview"
+    echo
+    echo "If you're getting '--user' install errors, you may be in a virtual environment"
+    echo "that doesn't allow user installs. Try activating/deactivating your virtual environment."
     echo
     echo "For help, visit: https://github.com/Chatelo/freview/issues"
     exit 1
