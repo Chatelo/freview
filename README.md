@@ -2,6 +2,18 @@
 
 A comprehensive code review tool for Flask applications that analyzes project structure and SQLAlchemy models to ensure best practices and identify potential issues.
 
+## Quick Start
+
+Install and run FReview in seconds:
+
+```bash
+# Install FReview
+curl -sSL https://raw.githubusercontent.com/Chatelo/freview/main/install_freview.sh | bash
+
+# Review a Flask project
+freview review /path/to/your/flask/project
+```
+
 ## Features
 
 - 🏗️ **Project Structure Analysis**: Validates Flask project organization and required files
@@ -13,24 +25,56 @@ A comprehensive code review tool for Flask applications that analyzes project st
 
 ## Installation
 
-### Global Installation (Recommended)
+### Quick Install (Recommended)
 
-#### Using uv (Fastest)
+Install FReview with a single command:
+
 ```bash
-# Install globally with uv
-uv tool install freview
-
-# Or install from source
-uv tool install git+https://github.com/your-username/freview.git
+curl -sSL https://raw.githubusercontent.com/Chatelo/freview/main/install_freview.sh | bash
 ```
 
-#### Using pip
-```bash
-# Install from PyPI (when published)
-pip install freview
+This script will:
+- Install [uv](https://github.com/astral-sh/uv) if needed (fastest Python package manager)
+- Install FReview globally using the best available method (uv → pipx → pip)
+- Verify the installation works correctly
+- Show usage instructions
 
-# Or install globally with pipx (recommended)
+**Security-conscious?** Download and inspect the script first:
+```bash
+curl -sSL https://raw.githubusercontent.com/Chatelo/freview/main/install_freview.sh -o install_freview.sh
+# Review the script contents
+cat install_freview.sh
+# Run it
+bash install_freview.sh
+```
+
+### Manual Installation
+
+#### Global Installation
+
+##### Using uv (Fastest)
+```bash
+# Install uv first (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install FReview globally
+uv tool install freview
+```
+
+##### Using pipx (Recommended for pip users)
+```bash
+# Install pipx if needed
+pip install --user pipx
+pipx ensurepath
+
+# Install FReview
 pipx install freview
+```
+
+##### Using pip
+```bash
+# Install globally with pip
+pip install --user freview
 ```
 
 ### Development Installation

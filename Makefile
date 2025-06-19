@@ -58,5 +58,10 @@ test-global: install-global ## Test global installation
 	freview version
 	@echo "Global installation test passed!"
 
+test-install-script: ## Test the installation script
+	@echo "Testing installation script..."
+	./install_freview.sh
+	@echo "Installation script test completed!"
+
 uninstall-global: ## Uninstall global installation
 	uv tool uninstall freview

@@ -14,7 +14,7 @@ Thank you for your interest in contributing to FReview! This document provides g
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/ronoh48/freview.git
+   git clone https://github.com/Chatelo/freview.git
    cd freview
    ```
 
@@ -33,8 +33,8 @@ Thank you for your interest in contributing to FReview! This document provides g
    # For development
    uv run freview --help
    
-   # Test global installation
-   uv tool install . --force
+   # Test global installation from source
+   ./install_freview.sh
    freview --help
    ```
 
