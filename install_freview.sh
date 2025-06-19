@@ -33,6 +33,47 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# Add PATH export to shell profile
+add_to_shell_profile() {
+    local export_line="$1"
+    
+    # Detect shell and add to appropriate config file
+    case $SHELL in
+        */zsh)
+            if [[ -f ~/.zshrc ]]; then
+                if ! grep -q "$export_line" ~/.zshrc; then
+                    echo "$export_line" >> ~/.zshrc
+                    print_status "Added to ~/.zshrc"
+                fi
+            fi
+            ;;
+        */bash)
+            if [[ -f ~/.bashrc ]]; then
+                if ! grep -q "$export_line" ~/.bashrc; then
+                    echo "$export_line" >> ~/.bashrc
+                    print_status "Added to ~/.bashrc"
+                fi
+            elif [[ -f ~/.bash_profile ]]; then
+                if ! grep -q "$export_line" ~/.bash_profile; then
+                    echo "$export_line" >> ~/.bash_profile
+                    print_status "Added to ~/.bash_profile"
+                fi
+            fi
+            ;;
+        */fish)
+            if [[ -d ~/.config/fish ]]; then
+                local fish_config="set -gx PATH $(echo $export_line | sed 's/export PATH="//' | sed 's/:\$PATH"//' | sed 's/\$HOME/~/')" 
+                echo "$fish_config \$PATH" >> ~/.config/fish/config.fish
+                print_status "Added to ~/.config/fish/config.fish"
+            fi
+            ;;
+        *)
+            print_warning "Unknown shell ($SHELL). Please add the following to your shell profile manually:"
+            print_warning "$export_line"
+            ;;
+    esac
+}
+
 # Install uv if not present
 install_uv() {
     if command_exists uv; then
@@ -57,11 +98,33 @@ install_freview_uv() {
     print_status "Installing FReview using uv..."
     if uv tool install freview; then
         print_success "FReview installed successfully with uv"
+        
+        # Ensure uv tools are in PATH
+        UV_TOOLS_BIN="$HOME/.local/share/uv/tools/bin"
+        if [[ ":$PATH:" != *":$UV_TOOLS_BIN:"* ]]; then
+            export PATH="$UV_TOOLS_BIN:$PATH"
+            print_status "Added uv tools directory to PATH for this session."
+            
+            # Add to shell profile
+            add_to_shell_profile 'export PATH="$HOME/.local/share/uv/tools/bin:$PATH"'
+        fi
+        
         return 0
     else
         print_warning "Failed to install from PyPI with uv, trying from source..."
         if uv tool install git+https://github.com/Chatelo/freview.git; then
             print_success "FReview installed successfully from source"
+            
+            # Ensure uv tools are in PATH  
+            UV_TOOLS_BIN="$HOME/.local/share/uv/tools/bin"
+            if [[ ":$PATH:" != *":$UV_TOOLS_BIN:"* ]]; then
+                export PATH="$UV_TOOLS_BIN:$PATH"
+                print_status "Added uv tools directory to PATH for this session."
+                
+                # Add to shell profile
+                add_to_shell_profile 'export PATH="$HOME/.local/share/uv/tools/bin:$PATH"'
+            fi
+            
             return 0
         else
             print_error "Failed to install FReview with uv"
@@ -116,11 +179,33 @@ install_freview_pip() {
     
     if $PIP_CMD install --user freview; then
         print_success "FReview installed successfully with $PIP_CMD"
+        
+        # Add user bin to PATH if not already there
+        USER_BIN="$HOME/.local/bin"
+        if [[ ":$PATH:" != *":$USER_BIN:"* ]]; then
+            export PATH="$USER_BIN:$PATH"
+            print_status "Added $USER_BIN to PATH for this session."
+            
+            # Add to shell profile
+            add_to_shell_profile 'export PATH="$HOME/.local/bin:$PATH"'
+        fi
+        
         return 0
     else
         print_warning "Failed to install from PyPI with $PIP_CMD, trying from source..."
         if $PIP_CMD install --user git+https://github.com/Chatelo/freview.git; then
             print_success "FReview installed successfully from source"
+            
+            # Add user bin to PATH if not already there
+            USER_BIN="$HOME/.local/bin"
+            if [[ ":$PATH:" != *":$USER_BIN:"* ]]; then
+                export PATH="$USER_BIN:$PATH"
+                print_status "Added $USER_BIN to PATH for this session."
+                
+                # Add to shell profile
+                add_to_shell_profile 'export PATH="$HOME/.local/bin:$PATH"'
+            fi
+            
             return 0
         else
             print_error "Failed to install FReview with $PIP_CMD"
@@ -187,8 +272,16 @@ show_usage() {
     echo
     echo "For more information, visit: https://github.com/Chatelo/freview"
     echo
-    print_warning "Note: You may need to restart your terminal or run 'source ~/.bashrc' (or ~/.zshrc)"
-    print_warning "if the 'freview' command is not immediately available."
+    
+    # Check if freview is immediately available
+    if command_exists freview; then
+        print_success "✅ freview is ready to use!"
+    else
+        print_warning "⚠️  You may need to restart your terminal or run:"
+        echo "     source ~/.bashrc   # For bash users"
+        echo "     source ~/.zshrc    # For zsh users"
+        echo "  to make the 'freview' command available."
+    fi
 }
 
 # Main installation function

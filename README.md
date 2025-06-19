@@ -36,6 +36,7 @@ curl -sSL https://raw.githubusercontent.com/Chatelo/freview/main/install_freview
 This script will:
 - Install [uv](https://github.com/astral-sh/uv) if needed (fastest Python package manager)
 - Install FReview globally using the best available method (uv → pipx → pip)
+- **Automatically configure your PATH** (no manual shell restart needed!)
 - Verify the installation works correctly
 - Show usage instructions
 
@@ -274,6 +275,71 @@ table_name_pattern = "^[a-z_]+$"
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+## Installation Troubleshooting
+
+If you encounter issues during installation:
+
+**Command not found after installation:**
+```bash
+# Restart your terminal or reload your shell configuration
+source ~/.bashrc    # For bash
+source ~/.zshrc     # For zsh
+```
+
+**Permission errors with pip:**
+```bash
+# The script automatically uses --user flag, but if you install manually:
+pip install --user freview
+```
+
+**Python version compatibility:**
+- Minimum required: Python 3.9+
+- Check your version: `python --version`
+
+**For corporate networks:**
+```bash
+# If behind proxy, configure git and pip accordingly
+git config --global http.proxy http://proxy:port
+pip install --proxy http://proxy:port --user freview
+```
+
+## Uninstalling FReview
+
+If you need to remove FReview from your system:
+
+### If installed with uv
+```bash
+uv tool uninstall freview
+```
+
+### If installed with pipx
+```bash
+pipx uninstall freview
+```
+
+### If installed with pip
+```bash
+pip uninstall freview
+```
+
+### Clean up shell configuration (optional)
+If you want to remove the PATH entries that were automatically added:
+
+```bash
+# For bash users - edit ~/.bashrc and remove the freview PATH line
+nano ~/.bashrc
+
+# For zsh users - edit ~/.zshrc and remove the freview PATH line  
+nano ~/.zshrc
+
+# For fish users - edit ~/.config/fish/config.fish
+nano ~/.config/fish/config.fish
+```
+
+Look for and remove lines like:
+- `export PATH="$HOME/.local/bin:$PATH"`
+- `export PATH="$HOME/.local/share/uv/tools/bin:$PATH"`
 
 ## License
 
