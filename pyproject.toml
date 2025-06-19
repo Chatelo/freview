@@ -1,0 +1,20 @@
+[project]
+name = "freview"
+version = "1.0.0"
+description = "Flask code structure and model review tool"
+readme = "README.md"
+authors = [{ name = "Benard Ronoh", email = "ronohbenard48@gmail.com" }]
+requires-python = ">=3.13"
+
+dependencies = [
+    "typer>=0.9",
+    "rich"
+]
+
+
+[project.scripts]
+freview = "freview.cli:app"
+
+[tool.uv]
+entrypoints = ["freview"]
+
