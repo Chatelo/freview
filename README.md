@@ -1,177 +1,108 @@
-# FReview - Flask Project Review Tool
+# 🔍 FReview
+
+**Automated Code Review Tool for Flask Projects**
+
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-Compatible-green.svg)](https://flask.palletsprojects.com)
+[![License](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
 
 A comprehensive code review tool for Flask applications that analyzes project structure and SQLAlchemy models to ensure best practices and identify potential issues.
 
-## Quick Start
+## ✨ Features
 
-Install and run FReview in seconds:
+| Tool | Purpose | Status |
+|------|---------|--------|
+| 🏗️ Project Structure | Validates Flask project organization and required files | ✅ |
+| 🧠 SQLAlchemy Models | Deep analysis of model definitions, relationships, and constraints | ✅ |
+| 📝 Multiple Output | Console output with optional Markdown/JSON reports | ✅ |
+| 🎨 Rich Terminal UI | Beautiful, colored output with emojis and formatting | ✅ |
 
-```bash
-# Install FReview
-curl -sSL https://raw.githubusercontent.com/Chatelo/freview/main/install_freview.sh | bash
+## 🚀 Installation
 
-# Review a Flask project
-freview review /path/to/your/flask/project
-```
+FReview can be installed globally on your machine using multiple methods. Choose the one that works best for your setup:
 
-## Features
-
-- 🏗️ **Project Structure Analysis**: Validates Flask project organization and required files
-- 🧠 **SQLAlchemy Model Review**: Deep analysis of model definitions, relationships, and constraints
-- 📝 **Multiple Output Formats**: Console output with optional Markdown reports
-- 🎨 **Rich Terminal UI**: Beautiful, colored output with emojis and formatting
-- ⚡ **Fast AST Parsing**: Efficient static analysis without code execution
-- 🔍 **Comprehensive Checks**: Validates naming conventions, relationships, and best practices
-
-## Installation
-
-### Quick Install (Recommended)
-
-Install FReview with a single command:
+### 🎯 Method 1: One-Line Installation (Recommended)
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/Chatelo/freview/main/install_freview.sh | bash
 ```
 
-This script will:
-- Install [uv](https://github.com/astral-sh/uv) if needed (fastest Python package manager)
-- Install FReview globally using the best available method (uv → pipx → pip)
-- **Automatically configure your PATH** (no manual shell restart needed!)
-- Verify the installation works correctly
-- Show usage instructions
+This script automatically detects the best installation method available on your system.
 
-**Security-conscious?** Download and inspect the script first:
+### 🔧 Method 2: Using pipx (Recommended for CLI tools)
+
 ```bash
-curl -sSL https://raw.githubusercontent.com/Chatelo/freview/main/install_freview.sh -o install_freview.sh
-# Review the script contents
-cat install_freview.sh
-# Run it
-bash install_freview.sh
+pipx install git+https://github.com/Chatelo/freview.git
 ```
 
-### Manual Installation
+Best for: Global CLI tool installation with isolated dependencies
 
-#### Global Installation
+### ⚡ Method 3: Using uv
 
-##### Using uv (Fastest)
 ```bash
-# Install uv first (if not already installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Install FReview globally
-uv tool install freview
+uv tool install git+https://github.com/Chatelo/freview.git
 ```
 
-##### Using pipx (Recommended for pip users)
-```bash
-# Install pipx if needed
-pip install --user pipx
-pipx ensurepath
+Best for: Fast installation with modern Python tooling
 
-# Install FReview
-pipx install freview
+### 📦 Method 4: Using pip
+
+```bash
+pip install --user git+https://github.com/Chatelo/freview.git
 ```
 
-##### Using pip
+Best for: Traditional Python package installation
+
+### 🛠️ Method 5: Manual Installation Script
+
+Download and run the installation script with specific method:
+
 ```bash
-# Install globally with pip
-pip install --user freview
+# Download the script
+curl -O https://raw.githubusercontent.com/Chatelo/freview/main/install_freview.sh
+chmod +x install_freview.sh
+
+# Install with specific method
+./install_freview.sh pipx    # Using pipx
+./install_freview.sh uv      # Using uv  
+./install_freview.sh pip     # Using pip
+./install_freview.sh auto    # Auto-detect (default)
 ```
 
-### Development Installation
+### 🧪 Method 6: Development Installation
 
-#### Using uv
-```bash
-# Clone and install for development
-git clone https://github.com/your-username/freview.git
-cd freview
-uv sync
-```
+For contributors or testing:
 
-#### Using pip
 ```bash
-# Install from source in development mode
-git clone https://github.com/your-username/freview.git
+git clone https://github.com/Chatelo/freview.git
 cd freview
 pip install -e .
 ```
 
-### Verify Installation
+### ✅ Verify Installation
 
-After installation, verify it works:
+After installation, verify that FReview is working:
 
 ```bash
-# Check version (multiple ways)
 freview --version
-freview -V  
-freview version
-
-# Show help
 freview --help
-
-# Test on a sample project
-freview review /path/to/any/flask/project
 ```
 
-## Usage
-
-### Global Installation
-Once installed globally, you can use `freview` from anywhere:
+## 💻 Usage
 
 ```bash
-# Review any Flask project
-freview review /path/to/your/flask/project
-
-# Generate a Markdown report
-freview review /path/to/your/flask/project --markdown
-
-# Generate a JSON report
-freview review /path/to/your/flask/project --json
-
-# Show version
-freview version
-freview --version
-
-# Initialize configuration in a project
-freview init /path/to/your/flask/project
-
-# Enable shell completion (optional)
-freview --install-completion
+freview review path_to_flask_project
 ```
 
-### Development Usage
-If you're working with the source code:
+### What FReview Does:
 
-```bash
-# Review a Flask project
-uv run freview review /path/to/your/flask/project
+• 🔍 Analyzes project structure
+• 🧠 Reviews SQLAlchemy models  
+• 📊 Generates comprehensive reports
 
-# Generate reports
-uv run freview review /path/to/your/flask/project --markdown --json
-```
+## 📊 Report Output
 
-### What it Checks
-
-#### Project Structure
-- ✅ Entry point files (app.py, run.py, main.py)
-- ✅ Models directory structure
-- ✅ Templates and static directories
-- ✅ Configuration files (.env, config.py)
-- ✅ Blueprint organization
-
-#### SQLAlchemy Models
-- ✅ Table name conventions (snake_case)
-- ✅ Class name conventions (PascalCase)
-- ✅ Primary key definitions
-- ✅ Foreign key relationships
-- ✅ Column constraints and indexing
-- ✅ Enum usage
-- ✅ Default values
-- ✅ Relationship definitions
-- ⚠️ Circular import detection
-- ⚠️ Unused model detection
-
-## Example Output
+After scanning, you'll find detailed analysis results in your terminal:
 
 ```
 🔍 Reviewing /home/user/my-flask-app
@@ -194,93 +125,39 @@ uv run freview review /path/to/your/flask/project --markdown --json
 📝 Saved Markdown report: review_report.md
 ```
 
-## Development
+## 🛠️ Exception Handling
 
-### Setting up the development environment
+FReview gracefully handles various scenarios:
 
-```bash
-# Clone the repository
-git clone https://github.com/your-username/freview.git
-cd freview
+• ❌ Missing Tools: When analysis dependencies are not available
+• 📁 Invalid Structure: When directory structure is incomplete or invalid  
+• 🔧 Flexible Analysis: Continues analysis even when some checks fail
 
-# Install with development dependencies using uv
-uv sync
+## 📝 Important Notes
 
-# Run tests
-uv run pytest
+> ⚠️ **Disclaimer:** FReview is designed for code reviews and educational purposes, not as a definitive standard for production readiness.
 
-# Format code
-uv run black .
+> 💡 **Purpose:** It serves as a helpful starting point for evaluating code quality and establishing best practices in your team's codebase.
 
-# Type checking
-uv run mypy freview/
+## 🚀 Future Enhancements
 
-# Lint code
-uv run flake8 freview/
+We're planning to expand FReview with additional features:
 
-# Run the tool directly
-uv run freview --help
-```
+• 📄 Configuration Files: Enhanced validation for Flask configs
+• ⚠️ Error Handling: Proper error handler detection
+• 🔒 Security Controls: Enhanced security validations  
+• 📑 Interactive Reports: Beautiful web-based report output
 
-### Using Make Commands
+## 🎉 Happy Reviewing!
 
-```bash
-# Run all quality checks
-make all-checks
+Found this helpful? Give it a ⭐ on GitHub!
 
-# Run tests
-make test
-
-# Format and lint code
-make format lint
-
-# Run type checking
-make type-check
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-uv run pytest
-
-# Run with coverage
-uv run pytest --cov=freview --cov-report=html
-
-# Run specific test file
-uv run pytest tests/test_model_checker.py
-```
-
-## Configuration
-
-Create a `.freview.toml` file in your project root to customize analysis:
-
-```toml
-[freview]
-# Custom model directories to scan
-model_dirs = ["models", "app/models", "src/models"]
-
-# Skip certain checks
-skip_checks = ["unused_models", "circular_imports"]
-
-# Custom naming patterns
-class_name_pattern = "^[A-Z][a-zA-Z0-9]+$"
-table_name_pattern = "^[a-z_]+$"
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Installation Troubleshooting
+### 🔧 Installation Troubleshooting
 
 If you encounter issues during installation:
 
 **Command not found after installation:**
+
 ```bash
 # Restart your terminal or reload your shell configuration
 source ~/.bashrc    # For bash
@@ -288,20 +165,23 @@ source ~/.zshrc     # For zsh
 ```
 
 **Permission errors with pip:**
+
 ```bash
-# The script automatically uses --user flag, but if you install manually:
-pip install --user freview
+# Use --user flag to install in user directory
+pip install --user git+https://github.com/Chatelo/freview.git
 ```
 
 **Python version compatibility:**
-- Minimum required: Python 3.9+
-- Check your version: `python --version`
+
+• Minimum required: Python 3.9+
+• Check your version: `python --version`
 
 **For corporate networks:**
+
 ```bash
 # If behind proxy, configure git and pip accordingly
 git config --global http.proxy http://proxy:port
-pip install --proxy http://proxy:port --user freview
+pip install --proxy http://proxy:port --user git+https://github.com/Chatelo/freview.git
 ```
 
 ## Uninstalling FReview
