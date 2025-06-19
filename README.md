@@ -227,8 +227,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Changelog
 
-### v1.0.0
-- Initial release
-- Basic project structure analysis
-- SQLAlchemy model validation
-- Markdown report generation
+See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes and releases.
