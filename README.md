@@ -29,21 +29,21 @@ curl -sSL https://raw.githubusercontent.com/Chatelo/freview/main/install_freview
 
 This script automatically detects the best installation method available on your system.
 
-### 🔧 Method 2: Using pipx (Recommended for CLI tools)
-
-```bash
-pipx install git+https://github.com/Chatelo/freview.git
-```
-
-Best for: Global CLI tool installation with isolated dependencies
-
-### ⚡ Method 3: Using uv
+### ⚡ Method 2: Using uv
 
 ```bash
 uv tool install git+https://github.com/Chatelo/freview.git
 ```
 
 Best for: Fast installation with modern Python tooling
+
+### 🔧 Method 3: Using pipx (Recommended for CLI tools)
+
+```bash
+pipx install git+https://github.com/Chatelo/freview.git
+```
+
+Best for: Global CLI tool installation with isolated dependencies
 
 ### 📦 Method 4: Using pip
 
