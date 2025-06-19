@@ -13,40 +13,96 @@ A comprehensive code review tool for Flask applications that analyzes project st
 
 ## Installation
 
-### Using uv (Recommended)
+### Global Installation (Recommended)
 
+#### Using uv (Fastest)
 ```bash
-# Install uv if you haven't already
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# Install globally with uv
+uv tool install freview
 
-# Clone and install
+# Or install from source
+uv tool install git+https://github.com/your-username/freview.git
+```
+
+#### Using pip
+```bash
+# Install from PyPI (when published)
+pip install freview
+
+# Or install globally with pipx (recommended)
+pipx install freview
+```
+
+### Development Installation
+
+#### Using uv
+```bash
+# Clone and install for development
 git clone https://github.com/your-username/freview.git
 cd freview
 uv sync
 ```
 
-### Using pip
-
+#### Using pip
 ```bash
-# Install from PyPI (when published)
-pip install freview
-
-# Or install from source
+# Install from source in development mode
 git clone https://github.com/your-username/freview.git
 cd freview
 pip install -e .
 ```
 
-## Usage
+### Verify Installation
 
-### Basic Usage
+After installation, verify it works:
 
 ```bash
-# Review a Flask project
+# Check version (multiple ways)
+freview --version
+freview -V  
+freview version
+
+# Show help
+freview --help
+
+# Test on a sample project
+freview review /path/to/any/flask/project
+```
+
+## Usage
+
+### Global Installation
+Once installed globally, you can use `freview` from anywhere:
+
+```bash
+# Review any Flask project
 freview review /path/to/your/flask/project
 
 # Generate a Markdown report
 freview review /path/to/your/flask/project --markdown
+
+# Generate a JSON report
+freview review /path/to/your/flask/project --json
+
+# Show version
+freview version
+freview --version
+
+# Initialize configuration in a project
+freview init /path/to/your/flask/project
+
+# Enable shell completion (optional)
+freview --install-completion
+```
+
+### Development Usage
+If you're working with the source code:
+
+```bash
+# Review a Flask project
+uv run freview review /path/to/your/flask/project
+
+# Generate reports
+uv run freview review /path/to/your/flask/project --markdown --json
 ```
 
 ### What it Checks
@@ -119,6 +175,22 @@ uv run flake8 freview/
 
 # Run the tool directly
 uv run freview --help
+```
+
+### Using Make Commands
+
+```bash
+# Run all quality checks
+make all-checks
+
+# Run tests
+make test
+
+# Format and lint code
+make format lint
+
+# Run type checking
+make type-check
 ```
 
 ### Running Tests

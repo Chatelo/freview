@@ -6,17 +6,26 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
-from rich.text import Text
 
 from freview.project_analyzer import analyze_project_structure
 from freview.model_checker import analyze_models
 from freview.utils import write_markdown_report, write_json_report
+from freview import __version__
 
 console = Console()
+
+
+def version_callback(value: bool):
+    if value:
+        console.print(f"freview version {__version__}")
+        raise typer.Exit()
+
+
 app = typer.Typer(
     name="freview",
     help="Flask Project Review Tool - Analyze Flask project structure and SQLAlchemy models",
     rich_markup_mode="rich",
+    add_completion=False,
 )
 
 
@@ -179,7 +188,11 @@ def init(
 
 
 @app.callback()
-def main():
+def main(
+    version: bool = typer.Option(
+        False, "--version", "-V", callback=version_callback, is_eager=True, help="Show version and exit"
+    ),
+):
     """
     FReview - Flask Project Review Tool
 

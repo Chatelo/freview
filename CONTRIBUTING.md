@@ -7,7 +7,8 @@ Thank you for your interest in contributing to FReview! This document provides g
 ### Prerequisites
 
 - Python 3.9 or higher
-- [uv](https://github.com/astral-sh/uv) package manager
+- [uv](https://github.com/astral-sh/uv) package manager (recommended)
+- OR [pipx](https://github.com/pypa/pipx) for global installation testing
 
 ### Getting Started
 
@@ -29,7 +30,12 @@ Thank you for your interest in contributing to FReview! This document provides g
 
 4. **Run the tool**
    ```bash
+   # For development
    uv run freview --help
+   
+   # Test global installation
+   uv tool install . --force
+   freview --help
    ```
 
 ## Development Workflow
@@ -42,10 +48,14 @@ This project uses [uv](https://github.com/astral-sh/uv) for fast, reliable Pytho
 # Install dependencies
 uv sync
 
-# Run commands in the virtual environment
+# Run commands in the virtual environment (development)
 uv run freview review /path/to/project
 uv run pytest
 uv run black freview/
+
+# Test global installation
+uv tool install . --force
+freview review /path/to/project
 
 # Add new dependencies
 uv add package-name

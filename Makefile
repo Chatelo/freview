@@ -47,3 +47,16 @@ build: ## Build the package
 
 publish: ## Publish to PyPI (requires setup)
 	uv publish
+
+install-global: build ## Install globally with uv tool
+	uv tool uninstall freview || true
+	uv tool install ./dist/freview-*-py3-none-any.whl
+
+test-global: install-global ## Test global installation
+	freview --version
+	freview -V
+	freview version
+	@echo "Global installation test passed!"
+
+uninstall-global: ## Uninstall global installation
+	uv tool uninstall freview
