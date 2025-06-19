@@ -3,18 +3,72 @@ name = "freview"
 version = "1.0.0"
 description = "Flask code structure and model review tool"
 readme = "README.md"
+license = {text = "MIT"}
 authors = [{ name = "Benard Ronoh", email = "ronohbenard48@gmail.com" }]
-requires-python = ">=3.13"
-
-dependencies = [
-    "typer>=0.9",
-    "rich"
+requires-python = ">=3.9"
+keywords = ["flask", "sqlalchemy", "code-review", "linting", "static-analysis"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10", 
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
+dependencies = [
+    "typer>=0.9.0",
+    "rich>=10.0.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/Chatelo/freview"
+Repository = "https://github.com/Chatelo/freview.git"
+Documentation = "https://github.com/Chatelo/freview#readme"
+"Bug Tracker" = "https://github.com/Chatelo/freview/issues"
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project.scripts]
 freview = "freview.cli:app"
 
 [tool.uv]
-entrypoints = ["freview"]
+dev-dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=22.0.0",
+    "flake8>=5.0.0",
+    "mypy>=1.0.0",
+    "pre-commit>=2.20.0"
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py39']
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --cov=freview --cov-report=term-missing"
+
+[tool.flake8]
+max-line-length = 100
+extend-ignore = ["E203", "W503"]
 
