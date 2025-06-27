@@ -97,10 +97,30 @@ install_uv() {
 # Install FReview using uv
 install_freview_uv() {
     print_status "Installing FReview using uv..."
-    if uv tool install freview; then
-        print_success "FReview installed successfully with uv"
+    
+    # TODO: Enable PyPI installation when package is published
+    # if uv tool install freview; then
+    #     print_success "FReview installed successfully with uv"
+    #     
+    #     # Ensure uv tools are in PATH
+    #     UV_TOOLS_BIN="$HOME/.local/share/uv/tools/bin"
+    #     if [[ ":$PATH:" != *":$UV_TOOLS_BIN:"* ]]; then
+    #         export PATH="$UV_TOOLS_BIN:$PATH"
+    #         print_status "Added uv tools directory to PATH for this session."
+    #         
+    #         # Add to shell profile
+    #         add_to_shell_profile 'export PATH="$HOME/.local/share/uv/tools/bin:$PATH"'
+    #     fi
+    #     
+    #     return 0
+    # else
+    #     print_warning "Failed to install from PyPI with uv, trying from source..."
+    
+    # Install directly from source (no PyPI package yet)
+    if uv tool install git+https://github.com/Chatelo/freview.git; then
+        print_success "FReview installed successfully"
         
-        # Ensure uv tools are in PATH
+        # Ensure uv tools are in PATH  
         UV_TOOLS_BIN="$HOME/.local/share/uv/tools/bin"
         if [[ ":$PATH:" != *":$UV_TOOLS_BIN:"* ]]; then
             export PATH="$UV_TOOLS_BIN:$PATH"
@@ -112,25 +132,8 @@ install_freview_uv() {
         
         return 0
     else
-        print_warning "Failed to install from PyPI with uv, trying from source..."
-        if uv tool install git+https://github.com/Chatelo/freview.git; then
-            print_success "FReview installed successfully from source"
-            
-            # Ensure uv tools are in PATH  
-            UV_TOOLS_BIN="$HOME/.local/share/uv/tools/bin"
-            if [[ ":$PATH:" != *":$UV_TOOLS_BIN:"* ]]; then
-                export PATH="$UV_TOOLS_BIN:$PATH"
-                print_status "Added uv tools directory to PATH for this session."
-                
-                # Add to shell profile
-                add_to_shell_profile 'export PATH="$HOME/.local/share/uv/tools/bin:$PATH"'
-            fi
-            
-            return 0
-        else
-            print_error "Failed to install FReview with uv"
-            return 1
-        fi
+        print_error "Failed to install FReview with uv"
+        return 1
     fi
 }
 
@@ -177,18 +180,21 @@ install_freview_pipx() {
     fi
     
     print_status "Installing FReview using pipx..."
-    if pipx install freview; then
-        print_success "FReview installed successfully with pipx"
+    
+    # TODO: Enable PyPI installation when package is published
+    # if pipx install freview; then
+    #     print_success "FReview installed successfully with pipx"
+    #     return 0
+    # else
+    #     print_warning "Failed to install from PyPI with pipx, trying from source..."
+    
+    # Install directly from source (no PyPI package yet)
+    if pipx install git+https://github.com/Chatelo/freview.git; then
+        print_success "FReview installed successfully"
         return 0
     else
-        print_warning "Failed to install from PyPI with pipx, trying from source..."
-        if pipx install git+https://github.com/Chatelo/freview.git; then
-            print_success "FReview installed successfully from source"
-            return 0
-        else
-            print_error "Failed to install FReview with pipx"
-            return 1
-        fi
+        print_error "Failed to install FReview with pipx"
+        return 1
     fi
 }
 
@@ -206,9 +212,28 @@ install_freview_pip() {
     
     # Check if --user installs are allowed
     if is_user_install_allowed; then
-        # Try --user install first
-        if $PIP_CMD install --user freview; then
-            print_success "FReview installed successfully with $PIP_CMD"
+        # TODO: Enable PyPI installation when package is published
+        # # Try --user install first
+        # if $PIP_CMD install --user freview; then
+        #     print_success "FReview installed successfully with $PIP_CMD"
+        #     
+        #     # Add user bin to PATH if not already there
+        #     USER_BIN="$HOME/.local/bin"
+        #     if [[ ":$PATH:" != *":$USER_BIN:"* ]]; then
+        #         export PATH="$USER_BIN:$PATH"
+        #         print_status "Added $USER_BIN to PATH for this session."
+        #         
+        #         # Add to shell profile
+        #         add_to_shell_profile 'export PATH="$HOME/.local/bin:$PATH"'
+        #     fi
+        #     
+        #     return 0
+        # else
+        #     print_warning "Failed to install from PyPI with $PIP_CMD --user, trying from source..."
+        
+        # Install directly from source (no PyPI package yet)
+        if $PIP_CMD install --user git+https://github.com/Chatelo/freview.git; then
+            print_success "FReview installed successfully"
             
             # Add user bin to PATH if not already there
             USER_BIN="$HOME/.local/bin"
@@ -222,41 +247,27 @@ install_freview_pip() {
             
             return 0
         else
-            print_warning "Failed to install from PyPI with $PIP_CMD --user, trying from source..."
-            if $PIP_CMD install --user git+https://github.com/Chatelo/freview.git; then
-                print_success "FReview installed successfully from source"
-                
-                # Add user bin to PATH if not already there
-                USER_BIN="$HOME/.local/bin"
-                if [[ ":$PATH:" != *":$USER_BIN:"* ]]; then
-                    export PATH="$USER_BIN:$PATH"
-                    print_status "Added $USER_BIN to PATH for this session."
-                    
-                    # Add to shell profile
-                    add_to_shell_profile 'export PATH="$HOME/.local/bin:$PATH"'
-                fi
-                
-                return 0
-            else
-                print_error "Failed to install FReview with $PIP_CMD --user"
-                return 1
-            fi
+            print_error "Failed to install FReview with $PIP_CMD --user"
+            return 1
         fi
     else
         # We're in a venv where --user installs aren't allowed, try direct install
         print_status "Virtual environment detected, installing directly..."
-        if $PIP_CMD install freview; then
-            print_success "FReview installed successfully with $PIP_CMD"
+        
+        # TODO: Enable PyPI installation when package is published
+        # if $PIP_CMD install freview; then
+        #     print_success "FReview installed successfully with $PIP_CMD"
+        #     return 0
+        # else
+        #     print_warning "Failed to install from PyPI with $PIP_CMD, trying from source..."
+        
+        # Install directly from source (no PyPI package yet)
+        if $PIP_CMD install git+https://github.com/Chatelo/freview.git; then
+            print_success "FReview installed successfully"
             return 0
         else
-            print_warning "Failed to install from PyPI with $PIP_CMD, trying from source..."
-            if $PIP_CMD install git+https://github.com/Chatelo/freview.git; then
-                print_success "FReview installed successfully from source"
-                return 0
-            else
-                print_error "Failed to install FReview with $PIP_CMD"
-                return 1
-            fi
+            print_error "Failed to install FReview with $PIP_CMD"
+            return 1
         fi
     fi
 }
