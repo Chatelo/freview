@@ -1,21 +1,58 @@
 # 🔍 FReview
 
-**Automated Code Review Tool for Flask Projects**
+**Comprehensive Code Review Tool for Flask Projects**
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-Compatible-green.svg)](https://flask.palletsprojects.com)
 [![License](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
 
-A comprehensive code review tool for Flask applications that analyzes project structure and SQLAlchemy models to ensure best practices and identify potential issues.
+A comprehensive code review tool for Flask applications that analyzes project structure, SQLAlchemy models, API patterns, and database configurations to ensure best practices and identify potential issues.
 
 ## ✨ Features
 
-| Tool | Purpose | Status |
-|------|---------|--------|
-| 🏗️ Project Structure | Validates Flask project organization and required files | ✅ |
-| 🧠 SQLAlchemy Models | Deep analysis of model definitions, relationships, and constraints | ✅ |
-| 📝 Multiple Output | Console output with optional Markdown/JSON reports | ✅ |
-| 🎨 Rich Terminal UI | Beautiful, colored output with emojis and formatting | ✅ |
+| Analysis Area | Purpose | Status |
+|---------------|---------|--------|
+| 🏗️ **Project Structure** | Validates Flask project organization, required files, and configuration | ✅ |
+| 🧠 **SQLAlchemy Models** | Deep analysis of model definitions, relationships, constraints, and best practices | ✅ |
+| 🌐 **API Patterns** | Reviews Flask routes, blueprints, REST conventions, authentication, and error handling | ✅ |
+| 🗄️ **Database Analysis** | Examines migrations, configurations, query patterns, and performance optimizations | ✅ |
+| 📝 **Multiple Reports** | Console output with optional Markdown/JSON reports for documentation | ✅ |
+| 🎨 **Rich Terminal UI** | Beautiful, colored output with emojis and professional formatting | ✅ |
+
+### 🔍 Detailed Analysis Capabilities
+
+#### 🏗️ Project Structure Analysis
+- ✅ Entry point validation (app.py, main.py, etc.)
+- ✅ Directory organization (models/, views/, templates/, static/)
+- ✅ Configuration management (config.py, .env files)
+- ✅ Blueprint structure detection
+- ✅ Testing setup validation
+- ✅ Documentation presence
+
+#### 🧠 SQLAlchemy Model Analysis  
+- ✅ Model class structure and naming conventions
+- ✅ Table naming and column definitions
+- ✅ Primary key and foreign key validation
+- ✅ Relationship definitions and circular dependency detection
+- ✅ Model methods (`__repr__`, `__str__`) validation
+- ✅ Model inheritance and mixins analysis
+
+#### 🌐 API Pattern Analysis
+- ✅ Route detection and Blueprint organization
+- ✅ REST API convention compliance
+- ✅ HTTP method usage patterns
+- ✅ Authentication and authorization checks
+- ✅ Input validation and error handling
+- ✅ API versioning and documentation
+- ✅ Security vulnerability detection
+
+#### 🗄️ Database Analysis
+- ✅ Migration setup (Alembic/Flask-Migrate)
+- ✅ Database configuration validation
+- ✅ Connection pooling and performance settings
+- ✅ Query pattern analysis and N+1 detection
+- ✅ Index usage and optimization suggestions
+- ✅ Security (hardcoded credentials detection)
 
 ## 🚀 Installation
 
@@ -90,48 +127,141 @@ freview --help
 
 ## 💻 Usage
 
+### Basic Usage
 ```bash
 freview review path_to_flask_project
 ```
 
-### What FReview Does:
+### Advanced Options
+```bash
+# Generate reports in multiple formats
+freview review myproject --markdown --json --output-dir reports/
 
-• 🔍 Analyzes project structure
-• 🧠 Reviews SQLAlchemy models  
-• 📊 Generates comprehensive reports
+# Skip specific analysis areas
+freview review myproject --skip-api --skip-db
+
+# Verbose output for debugging
+freview review myproject --verbose
+
+# Analyze only specific components
+freview review myproject --skip-structure --skip-models  # API & DB only
+```
+
+### Available Options
+- `--markdown, -m`: Generate Markdown report
+- `--json, -j`: Generate JSON report  
+- `--output-dir, -o`: Specify output directory for reports
+- `--verbose, -v`: Enable verbose output
+- `--skip-structure`: Skip project structure analysis
+- `--skip-models`: Skip SQLAlchemy model analysis
+- `--skip-api`: Skip API pattern analysis
+- `--skip-db`: Skip database analysis
+
+### What FReview Analyzes:
+
+• 🏗️ **Project Structure**: Entry points, organization, configuration
+• 🧠 **SQLAlchemy Models**: Definitions, relationships, best practices  
+• 🌐 **API Patterns**: Routes, blueprints, REST conventions, security
+• �️ **Database**: Migrations, configurations, query patterns
+• 📊 **Comprehensive Reports**: Actionable insights and recommendations
 
 ## 📊 Report Output
 
-After scanning, you'll find detailed analysis results in your terminal:
+After scanning, you'll find detailed analysis results in your terminal with color-coded insights:
 
 ```
-🔍 Reviewing /home/user/my-flask-app
+🔍 Reviewing Flask Project
+📁 Project Path: /home/user/my-flask-app
 
-📁 Structure Checks:
+🏗️ Project Structure Analysis
 ✅ Structure looks good
+✅ Found app.py entry point
+✅ Configuration management detected
 
-🧠 Model Checks:
+🧠 SQLAlchemy Model Analysis
 
 📄 models/user.py
-- ✅ User: Core model checks passed
-- ✅ User: ForeignKey used
-- ✅ User: relationship used
-- ℹ️ User: nullable=False
+✅ User: Core model requirements satisfied
+✅ User: Uses foreign key constraints (2 found)
+✅ User: Defines relationships (3 found)
+ℹ️  User: Consider adding __repr__ method for better debugging
 
 📄 models/post.py
-- ❌ Post: Missing __tablename__
-- ⚠️ Post: Class name should be PascalCase
+❌ Post: Missing __tablename__ attribute
+⚠️  Post: Class name should be PascalCase
+🔐 Post: Consider adding input validation
+
+🌐 API Pattern Analysis
+
+📄 views/auth.py
+✅ Found 5 route(s) in auth.py
+✅ Good: Project uses 3 blueprint(s)
+⚠️  Route 'delete_user' should include error handling
+🔐 Route 'admin_panel' may need authentication
+
+🗄️ Database Analysis
+
+📄 MIGRATIONS
+✅ Found 12 migration file(s)
+✅ Alembic configuration file present
+⚠️  Migration 003_add_indexes.py contains potentially dangerous operation
+
+📄 config.py
+✅ Database URI configuration present
+🔐 Warning: Potential hardcoded database credentials
+💡 Use environment variables: os.environ.get('DATABASE_URL')
 
 📝 Saved Markdown report: review_report.md
+📄 Saved JSON report: review_report.json
 ```
 
-## 🛠️ Exception Handling
+### Report Formats
+
+#### Console Output
+- **Rich terminal display** with colors and emojis
+- **Real-time progress** indicators
+- **Categorized findings** by analysis area
+
+#### Markdown Report (`--markdown`)
+- **Structured documentation** with sections for each analysis area
+- **Actionable recommendations** and best practices
+- **Code examples** and implementation guides
+- **Priority-based issue categorization**
+
+#### JSON Report (`--json`)
+- **Machine-readable format** for CI/CD integration
+- **Detailed metadata** for each finding
+- **Programmatic access** to analysis results
+- **Custom tooling integration** support
+
+## � What's New in v2.0
+
+### 🌐 API Pattern Analysis
+- **Route Detection**: Automatically finds Flask routes and blueprints
+- **REST Compliance**: Validates REST API conventions and best practices
+- **Security Review**: Checks authentication, input validation, and error handling
+- **Architecture Analysis**: Reviews API versioning, blueprint organization
+
+### 🗄️ Database Analysis  
+- **Migration Management**: Validates Alembic/Flask-Migrate setup
+- **Configuration Security**: Detects hardcoded credentials and security issues
+- **Performance Optimization**: Identifies N+1 queries and indexing opportunities
+- **Connection Analysis**: Reviews database pooling and connection settings
+
+### 📈 Enhanced Reporting
+- **Multi-format Output**: Console, Markdown, and JSON reports
+- **Actionable Insights**: Specific recommendations with implementation guides
+- **Priority Classification**: Error, warning, and informational categorization
+- **Cross-component Analysis**: Identifies relationships between different areas
+
+## �🛠️ Exception Handling
 
 FReview gracefully handles various scenarios:
 
-• ❌ Missing Tools: When analysis dependencies are not available
-• 📁 Invalid Structure: When directory structure is incomplete or invalid  
-• 🔧 Flexible Analysis: Continues analysis even when some checks fail
+• ❌ **Missing Dependencies**: Continues analysis when optional components are unavailable
+• 📁 **Invalid Structure**: Provides guidance for incomplete or non-standard project layouts  
+• 🔧 **Flexible Analysis**: Individual analysis components can be skipped via CLI options
+• 🚨 **Error Recovery**: Detailed error reporting with suggestions for resolution
 
 ## 📝 Important Notes
 
@@ -139,14 +269,7 @@ FReview gracefully handles various scenarios:
 
 > 💡 **Purpose:** It serves as a helpful starting point for evaluating code quality and establishing best practices in your team's codebase.
 
-## 🚀 Future Enhancements
-
-We're planning to expand FReview with additional features:
-
-• 📄 Configuration Files: Enhanced validation for Flask configs
-• ⚠️ Error Handling: Proper error handler detection
-• 🔒 Security Controls: Enhanced security validations  
-• 📑 Interactive Reports: Beautiful web-based report output
+> � **Continuous Improvement:** Regular updates include new analysis patterns and enhanced detection capabilities.
 
 ## 🎉 Happy Reviewing!
 

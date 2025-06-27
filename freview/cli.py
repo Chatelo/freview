@@ -9,6 +9,8 @@ from rich.table import Table
 
 from freview.project_analyzer import analyze_project_structure
 from freview.model_checker import analyze_models
+from freview.api_analyzer import analyze_api_patterns
+from freview.database_analyzer import analyze_database_patterns
 from freview.utils import write_markdown_report, write_json_report
 from freview import __version__
 
@@ -23,7 +25,7 @@ def version_callback(value: bool):
 
 app = typer.Typer(
     name="freview",
-    help="Flask Project Review Tool - Analyze Flask project structure and SQLAlchemy models",
+    help="Flask Project Review Tool - Comprehensive analysis of project structure, SQLAlchemy models, API patterns, and database configurations",
     rich_markup_mode="rich",
     add_completion=False,
 )
@@ -38,8 +40,12 @@ def review(
     output_dir: Optional[str] = typer.Option(
         None, "--output-dir", "-o", help="Output directory for reports"
     ),
+    skip_api: bool = typer.Option(False, "--skip-api", help="Skip API analysis"),
+    skip_db: bool = typer.Option(False, "--skip-db", help="Skip database analysis"),
+    skip_models: bool = typer.Option(False, "--skip-models", help="Skip model analysis"),
+    skip_structure: bool = typer.Option(False, "--skip-structure", help="Skip structure analysis"),
 ):
-    """Review Flask project structure and SQLAlchemy models."""
+    """Review Flask project structure, SQLAlchemy models, API patterns, and database configurations with comprehensive analysis."""
 
     # Setup logging
     log_level = logging.DEBUG if verbose else logging.INFO
@@ -72,24 +78,46 @@ def review(
         ) as progress:
 
             # Structure analysis
-            progress.add_task("Analyzing project structure...", total=None)
-            structure_issues = analyze_project_structure(project_path)
+            structure_issues = []
+            if not skip_structure:
+                progress.add_task("Analyzing project structure...", total=None)
+                structure_issues = analyze_project_structure(project_path)
 
             # Model analysis
-            progress.add_task("Analyzing SQLAlchemy models...", total=None)
-            model_issues = analyze_models(project_path)
+            model_issues = {}
+            if not skip_models:
+                progress.add_task("Analyzing SQLAlchemy models...", total=None)
+                model_issues = analyze_models(project_path)
+
+            # API analysis
+            api_issues = {}
+            if not skip_api:
+                progress.add_task("Analyzing API patterns...", total=None)
+                api_issues = analyze_api_patterns(project_path)
+
+            # Database analysis
+            db_issues = {}
+            if not skip_db:
+                progress.add_task("Analyzing database patterns...", total=None)
+                db_issues = analyze_database_patterns(project_path)
 
         # Display results with rich formatting
-        _display_structure_results(structure_issues)
-        _display_model_results(model_issues, project_path)
+        if not skip_structure:
+            _display_structure_results(structure_issues)
+        if not skip_models:
+            _display_model_results(model_issues, project_path)
+        if not skip_api:
+            _display_api_results(api_issues, project_path)
+        if not skip_db:
+            _display_database_results(db_issues, project_path)
 
         # Generate reports
         if markdown:
-            report_path = write_markdown_report(output_path, structure_issues, model_issues)
+            report_path = write_markdown_report(output_path, structure_issues, model_issues, api_issues, db_issues)
             console.print(f"\n[green]📝 Markdown report saved:[/green] {report_path}")
 
         if json_output:
-            report_path = write_json_report(output_path, structure_issues, model_issues)
+            report_path = write_json_report(output_path, structure_issues, model_issues, api_issues, db_issues)
             console.print(f"\n[green]📝 JSON report saved:[/green] {report_path}")
 
     except Exception as e:
@@ -146,6 +174,88 @@ def _display_model_results(model_issues: dict, project_path: Path):
                 console.print(f"  [green]{issue}[/green]")
             elif issue.startswith("ℹ️"):
                 console.print(f"  [blue]{issue}[/blue]")
+            else:
+                console.print(f"  [dim]{issue}[/dim]")
+
+
+def _display_api_results(api_issues: dict, project_path: Path):
+    """Display API analysis results with rich formatting."""
+    console.print("\n[bold]🌐 API Pattern Analysis[/bold]")
+
+    if not api_issues:
+        console.print("[yellow]⚠️ No API patterns detected in the project[/yellow]")
+        return
+
+    for file_path, issues in api_issues.items():
+        if isinstance(file_path, Path):
+            try:
+                relative_path = file_path.relative_to(project_path)
+                console.print(f"\n[bold cyan]📄 {relative_path}[/bold cyan]")
+            except ValueError:
+                # Handle special analysis keys like "API_ARCHITECTURE"
+                console.print(f"\n[bold cyan]📊 {file_path.name}[/bold cyan]")
+        else:
+            # Handle string keys
+            console.print(f"\n[bold cyan]📊 {str(file_path)}[/bold cyan]")
+
+        if not issues:
+            console.print("  [dim]No issues found[/dim]")
+            continue
+
+        for issue in issues:
+            if issue.startswith("❌"):
+                console.print(f"  [red]{issue}[/red]")
+            elif issue.startswith("⚠️"):
+                console.print(f"  [yellow]{issue}[/yellow]")
+            elif issue.startswith("✅"):
+                console.print(f"  [green]{issue}[/green]")
+            elif issue.startswith("🔐") or issue.startswith("🛡️"):
+                console.print(f"  [magenta]{issue}[/magenta]")
+            elif issue.startswith("💡"):
+                console.print(f"  [blue]{issue}[/blue]")
+            elif issue.startswith("📈") or issue.startswith("🏗️"):
+                console.print(f"  [cyan]{issue}[/cyan]")
+            else:
+                console.print(f"  [dim]{issue}[/dim]")
+
+
+def _display_database_results(db_issues: dict, project_path: Path):
+    """Display database analysis results with rich formatting."""
+    console.print("\n[bold]🗄️ Database Analysis[/bold]")
+
+    if not db_issues:
+        console.print("[yellow]⚠️ No database patterns detected in the project[/yellow]")
+        return
+
+    for file_path, issues in db_issues.items():
+        if isinstance(file_path, Path):
+            try:
+                relative_path = file_path.relative_to(project_path)
+                console.print(f"\n[bold cyan]📄 {relative_path}[/bold cyan]")
+            except ValueError:
+                # Handle special analysis keys
+                console.print(f"\n[bold cyan]📊 {file_path.name}[/bold cyan]")
+        else:
+            # Handle string keys
+            console.print(f"\n[bold cyan]📊 {str(file_path)}[/bold cyan]")
+
+        if not issues:
+            console.print("  [dim]No issues found[/dim]")
+            continue
+
+        for issue in issues:
+            if issue.startswith("❌"):
+                console.print(f"  [red]{issue}[/red]")
+            elif issue.startswith("⚠️"):
+                console.print(f"  [yellow]{issue}[/yellow]")
+            elif issue.startswith("✅"):
+                console.print(f"  [green]{issue}[/green]")
+            elif issue.startswith("🔐"):
+                console.print(f"  [magenta]{issue}[/magenta]")
+            elif issue.startswith("💡"):
+                console.print(f"  [blue]{issue}[/blue]")
+            elif issue.startswith("ℹ️"):
+                console.print(f"  [cyan]{issue}[/cyan]")
             else:
                 console.print(f"  [dim]{issue}[/dim]")
 

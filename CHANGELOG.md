@@ -7,8 +7,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-- Reordered installation methods in README.md - uv method is now the 2nd installation option
+## [2.0.0] - 2025-06-27
+
+### 🚀 Major Release - Comprehensive Analysis Platform
+
+This release transforms FReview from a basic structure and model checker into a comprehensive Flask project analysis platform.
+
+### 🌟 Major New Features
+
+#### 🌐 API Pattern Analysis
+- **NEW**: Flask route detection and analysis
+- **NEW**: Blueprint organization validation  
+- **NEW**: REST API convention checking
+- **NEW**: HTTP method usage pattern analysis
+- **NEW**: Authentication and authorization validation
+- **NEW**: Input validation and error handling checks
+- **NEW**: API versioning detection and recommendations
+- **NEW**: Security vulnerability detection in routes
+
+#### 🗄️ Database Analysis
+- **NEW**: Alembic/Flask-Migrate setup validation
+- **NEW**: Migration file analysis and safety checks
+- **NEW**: Database configuration security review
+- **NEW**: Connection pooling and performance settings analysis
+- **NEW**: Query pattern detection (N+1 queries, etc.)
+- **NEW**: Index usage and optimization suggestions  
+- **NEW**: Hardcoded credential detection
+
+#### 📈 Enhanced Reporting & CLI
+- **NEW**: Multi-format output (Console, Markdown, JSON)
+- **NEW**: Selective analysis with skip options (`--skip-api`, `--skip-db`, etc.)
+- **NEW**: Enhanced CLI with comprehensive options
+- **NEW**: Actionable recommendations with implementation guides
+- **NEW**: Cross-component analysis and relationship detection
+
+### 🛠️ Improvements
+
+#### Enhanced Model Analysis
+- **IMPROVED**: More sophisticated relationship analysis
+- **IMPROVED**: Better circular dependency detection
+- **IMPROVED**: Enhanced model validation patterns
+
+#### Better Project Structure Analysis  
+- **IMPROVED**: More comprehensive directory validation
+- **IMPROVED**: Configuration management detection
+- **IMPROVED**: Testing setup validation
+
+#### User Experience
+- **IMPROVED**: Richer terminal output with better categorization
+- **IMPROVED**: More descriptive error messages and suggestions
+- **IMPROVED**: Performance optimizations for large projects
+
+### 🔧 Technical Changes
+- **ADDED**: New `api_analyzer.py` module with comprehensive route analysis
+- **ADDED**: New `database_analyzer.py` module with migration and config analysis
+- **ENHANCED**: `cli.py` with new command options and better progress tracking
+- **ENHANCED**: `utils.py` with multi-format report generation
+- **UPDATED**: All documentation to reflect new capabilities
+
+### 📖 Documentation
+- **UPDATED**: README.md with comprehensive feature documentation
+- **UPDATED**: CLI help text and command descriptions
+- **ADDED**: Detailed usage examples and advanced options
+- **ADDED**: Report format specifications and examples
+
+### ⚡ Breaking Changes
+- **CLI**: New default behavior includes API and database analysis
+- **Reports**: Enhanced report format with additional sections
+- **Output**: More verbose console output by default
+
+### 🔄 Migration Guide from v1.x
+To upgrade from v1.x:
+1. The core functionality remains the same
+2. New analysis areas are enabled by default
+3. Use `--skip-api --skip-db` to get v1.x-like behavior
+4. Report formats have been enhanced but remain compatible
 
 ## [1.0.0] - 2025-06-19
 

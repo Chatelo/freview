@@ -1,7 +1,7 @@
 [project]
 name = "freview"
-version = "1.0.0"
-description = "Flask code structure and model review tool"
+version = "2.0.0"
+description = "Comprehensive Flask project analyzer - structure, models, APIs, and database patterns"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [{ name = "Benard Ronoh", email = "ronohbenard48@gmail.com" }]
