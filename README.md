@@ -89,6 +89,7 @@ pip install --user git+https://github.com/Chatelo/freview.git
 ```
 
 **Global Installation**: Traditional Python package installation with global access
+**Note**: Currently installs from source. PyPI package (`pip install freview`) coming soon!
 
 ### 🛠️ Method 5: Manual Installation Script
 

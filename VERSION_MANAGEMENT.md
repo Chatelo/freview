@@ -152,19 +152,20 @@ uv tool install git+https://github.com/Chatelo/freview.git@v1.x-maintenance
 ```
 
 #### PyPI Distribution (Future)
-When published to PyPI:
+When published to PyPI, installation will be even simpler:
 ```bash
-# Latest version - global installation
+# Future: Latest version - global installation
 pip install freview
 
-# Specific version - global installation
+# Future: Specific version - global installation
 pip install freview==2.0.0
 
-# Version range - global installation
+# Future: Version range - global installation
 pip install "freview>=1.0,<2.0"  # v1.x only
 pip install "freview>=2.0"        # v2.x and newer
 ```
 
+**Note**: Currently installs from source. PyPI package coming soon!
 **Note**: All methods install FReview globally. After installation, you can run `freview` from any directory.
 
 ## 🔄 Migration Strategies
