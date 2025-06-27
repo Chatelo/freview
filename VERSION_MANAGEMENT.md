@@ -40,23 +40,28 @@ v1.0.0, v1.1.0, v1.2.0   # v1.x releases
 v2.0.0, v2.1.0, v2.2.0   # v2.x releases
 ```
 
-### Installation by Version
+### Global Installation by Version
 
-Users can install specific versions:
+FReview installs globally and becomes available system-wide with the `freview` command:
 
 ```bash
-# Latest version (v2.x)
+# Latest version (v2.x) - installs globally
 uv tool install git+https://github.com/Chatelo/freview.git
 
-# Specific version
+# Specific version - installs globally  
 uv tool install git+https://github.com/Chatelo/freview.git@v2.0.0
 
-# Legacy v1.x (maintenance branch)  
+# Legacy v1.x (maintenance branch) - installs globally
 uv tool install git+https://github.com/Chatelo/freview.git@v1.x-maintenance
 
-# Specific legacy version
+# Specific legacy version - installs globally
 uv tool install git+https://github.com/Chatelo/freview.git@v1.2.0
+
+# Alternative with pipx (also global installation)
+pipx install git+https://github.com/Chatelo/freview.git@v2.0.0
 ```
+
+After installation, `freview` command is available globally from any directory.
 
 ## 🛠️ Developer Guide
 
@@ -128,35 +133,39 @@ git push origin v1.2.1
 
 ### Multiple Installation Channels
 
+All installation methods provide **global access** to the `freview` command:
+
 #### Latest Version (Default)
 ```bash
-# Always installs latest from main branch
+# Always installs latest from main branch globally
 uv tool install git+https://github.com/Chatelo/freview.git
 pipx install git+https://github.com/Chatelo/freview.git
 ```
 
 #### Version-Specific Installation
 ```bash
-# Install specific version
+# Install specific version globally
 uv tool install git+https://github.com/Chatelo/freview.git@v2.0.0
 
-# Install from maintenance branch (gets latest patches)
+# Install from maintenance branch globally (gets latest patches)
 uv tool install git+https://github.com/Chatelo/freview.git@v1.x-maintenance
 ```
 
 #### PyPI Distribution (Future)
 When published to PyPI:
 ```bash
-# Latest version
+# Latest version - global installation
 pip install freview
 
-# Specific version
+# Specific version - global installation
 pip install freview==2.0.0
 
-# Version range
+# Version range - global installation
 pip install "freview>=1.0,<2.0"  # v1.x only
 pip install "freview>=2.0"        # v2.x and newer
 ```
+
+**Note**: All methods install FReview globally. After installation, you can run `freview` from any directory.
 
 ## 🔄 Migration Strategies
 
@@ -174,13 +183,17 @@ uv tool install git+https://github.com/Chatelo/freview.git@v1.x-maintenance
 
 #### For CI/CD Pipelines
 ```bash
-# Pin to specific version in CI
+# Pin to specific version in CI (installs globally in CI environment)
 - name: Install FReview
   run: uv tool install git+https://github.com/Chatelo/freview.git@v2.0.0
 
-# Or use version ranges when PyPI is available
+# Or use version ranges when PyPI is available (global installation)
 - name: Install FReview  
   run: pip install "freview>=2.0,<3.0"
+
+# Then use globally available command
+- name: Run Analysis
+  run: freview review . --json --output-dir reports/
 ```
 
 ### Configuration-Based Compatibility

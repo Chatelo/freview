@@ -56,7 +56,7 @@ A comprehensive code review tool for Flask applications that analyzes project st
 
 ## 🚀 Installation
 
-FReview can be installed globally on your machine using multiple methods. Choose the one that works best for your setup:
+FReview installs **globally** on your machine, making the `freview` command available from any directory. Choose the installation method that works best for your setup:
 
 ### 🎯 Method 1: One-Line Installation (Recommended)
 
@@ -64,15 +64,15 @@ FReview can be installed globally on your machine using multiple methods. Choose
 curl -sSL https://raw.githubusercontent.com/Chatelo/freview/main/install_freview.sh | bash
 ```
 
-This script automatically detects the best installation method available on your system.
+This script automatically detects the best installation method and installs FReview globally.
 
-### ⚡ Method 2: Using uv
+### ⚡ Method 2: Using uv (Fast & Modern)
 
 ```bash
 uv tool install git+https://github.com/Chatelo/freview.git
 ```
 
-Best for: Fast installation with modern Python tooling
+**Global Installation**: Makes `freview` command available system-wide
 
 ### 🔧 Method 3: Using pipx (Recommended for CLI tools)
 
@@ -80,7 +80,7 @@ Best for: Fast installation with modern Python tooling
 pipx install git+https://github.com/Chatelo/freview.git
 ```
 
-Best for: Global CLI tool installation with isolated dependencies
+**Global Installation**: Isolated dependencies with global `freview` command access
 
 ### 📦 Method 4: Using pip
 
@@ -88,7 +88,7 @@ Best for: Global CLI tool installation with isolated dependencies
 pip install --user git+https://github.com/Chatelo/freview.git
 ```
 
-Best for: Traditional Python package installation
+**Global Installation**: Traditional Python package installation with global access
 
 ### 🛠️ Method 5: Manual Installation Script
 
@@ -118,11 +118,17 @@ pip install -e .
 
 ### ✅ Verify Installation
 
-After installation, verify that FReview is working:
+After installation, verify that FReview is working globally:
 
 ```bash
+# Check version (works from any directory)
 freview --version
+
+# Show help (works from any directory)  
 freview --help
+
+# Test on a project (run from anywhere)
+freview review /path/to/your/flask/project
 ```
 
 ## 💻 Usage

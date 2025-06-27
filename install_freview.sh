@@ -2,7 +2,8 @@
 set -e
 
 # FReview Installation Script
-# This script installs FReview Flask project review tool
+# This script installs FReview Flask project review tool GLOBALLY
+# After installation, 'freview' command will be available from any directory
 
 # Colors for output
 RED='\033[0;31m'
@@ -319,33 +320,42 @@ verify_installation() {
 # Show usage instructions
 show_usage() {
     echo
-    print_success "🎉 FReview installation complete!"
+    print_success "🎉 FReview installed GLOBALLY!"
     echo
-    echo "Usage:"
-    echo "  freview --version              # Check version"
-    echo "  freview --help                 # Show help"
-    echo "  freview review /path/to/flask  # Review a Flask project"
-    echo "  freview init /path/to/flask    # Initialize config"
+    print_status "The 'freview' command is now available from any directory on your system."
+    echo
+    echo "Usage (can be run from anywhere):"
+    echo "  freview --version                    # Check version"
+    echo "  freview --help                       # Show help"
+    echo "  freview review /path/to/flask        # Review a Flask project"
+    echo "  freview review .                     # Review current directory"
+    echo "  freview review ~/my-flask-app        # Review specific project"
+    echo
+    echo "Examples:"
+    echo "  cd /tmp && freview review ~/myproject     # Works from any directory"
+    echo "  freview review /home/user/flask-app      # Full path works anywhere"
     echo
     echo "For more information, visit: https://github.com/Chatelo/freview"
     echo
     
     # Check if freview is immediately available
     if command_exists freview; then
-        print_success "✅ freview is ready to use!"
+        print_success "✅ freview is ready to use globally!"
     else
         print_warning "⚠️  You may need to restart your terminal or run:"
         echo "     source ~/.bashrc   # For bash users"
         echo "     source ~/.zshrc    # For zsh users"
-        echo "  to make the 'freview' command available."
+        echo "  to make the 'freview' command available globally."
     fi
 }
 
 # Main installation function
 main() {
     echo
-    echo "🔧 FReview Installation Script"
-    echo "=============================="
+    echo "🔧 FReview Global Installation Script"
+    echo "===================================="
+    print_status "Installing FReview Flask review tool globally on your system..."
+    print_status "After installation, 'freview' will be available from any directory."
     echo
     
     # Try installation methods in order of preference
