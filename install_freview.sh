@@ -96,7 +96,9 @@ install_uv() {
 
 # Install FReview using uv
 install_freview_uv() {
-    print_status "Installing FReview using uv..."
+    echo
+    print_status "🚀 Installing FReview using uv..."
+    echo "   📦 Fetching latest version from GitHub..."
     
     # TODO: Enable PyPI installation when package is published
     # if uv tool install freview; then
@@ -118,13 +120,15 @@ install_freview_uv() {
     
     # Install directly from source (no PyPI package yet)
     if uv tool install git+https://github.com/Chatelo/freview.git; then
-        print_success "FReview installed successfully"
+        echo
+        print_success "✨ FReview installed successfully!"
+        print_status "🔧 Configuring global access..."
         
         # Ensure uv tools are in PATH  
         UV_TOOLS_BIN="$HOME/.local/share/uv/tools/bin"
         if [[ ":$PATH:" != *":$UV_TOOLS_BIN:"* ]]; then
             export PATH="$UV_TOOLS_BIN:$PATH"
-            print_status "Added uv tools directory to PATH for this session."
+            print_status "📁 Added uv tools directory to PATH for this session"
             
             # Add to shell profile
             add_to_shell_profile 'export PATH="$HOME/.local/share/uv/tools/bin:$PATH"'
@@ -179,7 +183,9 @@ install_freview_pipx() {
         fi
     fi
     
-    print_status "Installing FReview using pipx..."
+    echo
+    print_status "🚀 Installing FReview using pipx..."
+    echo "   📦 Fetching latest version from GitHub..."
     
     # TODO: Enable PyPI installation when package is published
     # if pipx install freview; then
@@ -190,7 +196,8 @@ install_freview_pipx() {
     
     # Install directly from source (no PyPI package yet)
     if pipx install git+https://github.com/Chatelo/freview.git; then
-        print_success "FReview installed successfully"
+        echo
+        print_success "✨ FReview installed successfully!"
         return 0
     else
         print_error "Failed to install FReview with pipx"
@@ -200,7 +207,10 @@ install_freview_pipx() {
 
 # Install FReview using pip (last resort)
 install_freview_pip() {
-    print_status "Installing FReview using pip..."
+    echo
+    print_status "🚀 Installing FReview using pip..."
+    echo "   📦 Fetching latest version from GitHub..."
+    
     if command_exists pip; then
         PIP_CMD="pip"
     elif command_exists pip3; then
@@ -233,13 +243,15 @@ install_freview_pip() {
         
         # Install directly from source (no PyPI package yet)
         if $PIP_CMD install --user git+https://github.com/Chatelo/freview.git; then
-            print_success "FReview installed successfully"
+            echo
+            print_success "✨ FReview installed successfully!"
+            print_status "🔧 Configuring global access..."
             
             # Add user bin to PATH if not already there
             USER_BIN="$HOME/.local/bin"
             if [[ ":$PATH:" != *":$USER_BIN:"* ]]; then
                 export PATH="$USER_BIN:$PATH"
-                print_status "Added $USER_BIN to PATH for this session."
+                print_status "📁 Added $USER_BIN to PATH for this session"
                 
                 # Add to shell profile
                 add_to_shell_profile 'export PATH="$HOME/.local/bin:$PATH"'
@@ -263,7 +275,8 @@ install_freview_pip() {
         
         # Install directly from source (no PyPI package yet)
         if $PIP_CMD install git+https://github.com/Chatelo/freview.git; then
-            print_success "FReview installed successfully"
+            echo
+            print_success "✨ FReview installed successfully!"
             return 0
         else
             print_error "Failed to install FReview with $PIP_CMD"
@@ -274,7 +287,10 @@ install_freview_pip() {
 
 # Verify installation
 verify_installation() {
-    print_status "Verifying installation..."
+    echo
+    echo -e "${BLUE}┌─ Verification ───────────────────────────────────────────────────────────────┐${NC}"
+    echo -e "${BLUE}│${NC}   🔍 Verifying installation...                                            ${BLUE}│${NC}"
+    echo -e "${BLUE}└──────────────────────────────────────────────────────────────────────────────┘${NC}"
     
     # Give the shell time to refresh PATH
     sleep 1
@@ -300,14 +316,18 @@ verify_installation() {
     fi
     
     if [[ -n "$FREVIEW_PATH" ]]; then
-        print_success "FReview found at: $FREVIEW_PATH"
+        print_success "📍 FReview found at: $FREVIEW_PATH"
         if VERSION_OUTPUT=$("$FREVIEW_PATH" --version 2>/dev/null); then
-            print_success "Installation verified: $VERSION_OUTPUT"
+            echo -e "${GREEN}╭──────────────────────────────────────────────────────────────────────────────╮${NC}"
+            echo -e "${GREEN}│${NC}                    ${GREEN}✅ Installation verified: $VERSION_OUTPUT${NC}                   ${GREEN}│${NC}"
+            echo -e "${GREEN}╰──────────────────────────────────────────────────────────────────────────────╯${NC}"
             return 0
         else
             print_warning "FReview installed but --version failed. Trying alternative..."
             if VERSION_OUTPUT=$("$FREVIEW_PATH" version 2>/dev/null); then
-                print_success "Installation verified: $VERSION_OUTPUT"
+                echo -e "${GREEN}╭──────────────────────────────────────────────────────────────────────────────╮${NC}"
+                echo -e "${GREEN}│${NC}                    ${GREEN}✅ Installation verified: $VERSION_OUTPUT${NC}                   ${GREEN}│${NC}"
+                echo -e "${GREEN}╰──────────────────────────────────────────────────────────────────────────────╯${NC}"
                 return 0
             fi
         fi
@@ -316,10 +336,14 @@ verify_installation() {
     # Try with just 'freview' command
     if command_exists freview; then
         if VERSION_OUTPUT=$(freview --version 2>/dev/null); then
-            print_success "Installation verified: $VERSION_OUTPUT"
+            echo -e "${GREEN}╭──────────────────────────────────────────────────────────────────────────────╮${NC}"
+            echo -e "${GREEN}│${NC}                    ${GREEN}✅ Installation verified: $VERSION_OUTPUT${NC}                   ${GREEN}│${NC}"
+            echo -e "${GREEN}╰──────────────────────────────────────────────────────────────────────────────╯${NC}"
             return 0
         elif VERSION_OUTPUT=$(freview version 2>/dev/null); then
-            print_success "Installation verified: $VERSION_OUTPUT"
+            echo -e "${GREEN}╭──────────────────────────────────────────────────────────────────────────────╮${NC}"
+            echo -e "${GREEN}│${NC}                    ${GREEN}✅ Installation verified: $VERSION_OUTPUT${NC}                   ${GREEN}│${NC}"
+            echo -e "${GREEN}╰──────────────────────────────────────────────────────────────────────────────╯${NC}"
             return 0
         fi
     fi
@@ -333,40 +357,63 @@ show_usage() {
     echo
     print_success "🎉 FReview installed GLOBALLY!"
     echo
+    
+    # Beautiful bordered usage section
+    echo -e "${BLUE}╭──────────────────────────────────────────────────────────────────────────────╮${NC}"
+    echo -e "${BLUE}│${NC}                          ${GREEN}🚀 Quick Start Guide${NC}                           ${BLUE}│${NC}"
+    echo -e "${BLUE}╰──────────────────────────────────────────────────────────────────────────────╯${NC}"
+    echo
     print_status "The 'freview' command is now available from any directory on your system."
     echo
-    echo "Usage (can be run from anywhere):"
-    echo "  freview --version                    # Check version"
-    echo "  freview --help                       # Show help"
-    echo "  freview review /path/to/flask        # Review a Flask project"
-    echo "  freview review .                     # Review current directory"
-    echo "  freview review ~/my-flask-app        # Review specific project"
+    echo -e "${BLUE}┌─ Usage Commands ─────────────────────────────────────────────────────────────┐${NC}"
+    echo -e "${BLUE}│${NC}  freview --version                    ${BLUE}# Check version${NC}                    ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}  freview --help                       ${BLUE}# Show help${NC}                       ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}  freview review /path/to/flask        ${BLUE}# Review a Flask project${NC}          ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}  freview review .                     ${BLUE}# Review current directory${NC}        ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}  freview review ~/my-flask-app        ${BLUE}# Review specific project${NC}         ${BLUE}│${NC}"
+    echo -e "${BLUE}└──────────────────────────────────────────────────────────────────────────────┘${NC}"
     echo
-    echo "Examples:"
-    echo "  cd /tmp && freview review ~/myproject     # Works from any directory"
-    echo "  freview review /home/user/flask-app      # Full path works anywhere"
+    echo -e "${BLUE}┌─ Examples (Works from any directory) ───────────────────────────────────────┐${NC}"
+    echo -e "${BLUE}│${NC}  cd /tmp && freview review ~/myproject     ${BLUE}# Works from any directory${NC}  ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}  freview review /home/user/flask-app      ${BLUE}# Full path works anywhere${NC}  ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}  freview review . --json --output-dir /tmp ${BLUE}# Generate reports${NC}          ${BLUE}│${NC}"
+    echo -e "${BLUE}└──────────────────────────────────────────────────────────────────────────────┘${NC}"
     echo
-    echo "For more information, visit: https://github.com/Chatelo/freview"
+    echo -e "${BLUE}📚 For more information: ${YELLOW}https://github.com/Chatelo/freview${NC}"
     echo
     
     # Check if freview is immediately available
     if command_exists freview; then
-        print_success "✅ freview is ready to use globally!"
+        echo -e "${GREEN}╭──────────────────────────────────────────────────────────────────────────────╮${NC}"
+        echo -e "${GREEN}│${NC}                       ${GREEN}✅ freview is ready to use globally!${NC}                     ${GREEN}│${NC}"
+        echo -e "${GREEN}╰──────────────────────────────────────────────────────────────────────────────╯${NC}"
     else
-        print_warning "⚠️  You may need to restart your terminal or run:"
-        echo "     source ~/.bashrc   # For bash users"
-        echo "     source ~/.zshrc    # For zsh users"
-        echo "  to make the 'freview' command available globally."
+        echo -e "${YELLOW}╭──────────────────────────────────────────────────────────────────────────────╮${NC}"
+        echo -e "${YELLOW}│${NC}  ${YELLOW}⚠️  You may need to restart your terminal or run:${NC}                        ${YELLOW}│${NC}"
+        echo -e "${YELLOW}│${NC}     source ~/.bashrc   ${BLUE}# For bash users${NC}                                   ${YELLOW}│${NC}"
+        echo -e "${YELLOW}│${NC}     source ~/.zshrc    ${BLUE}# For zsh users${NC}                                    ${YELLOW}│${NC}"
+        echo -e "${YELLOW}│${NC}  to make the 'freview' command available globally.                      ${YELLOW}│${NC}"
+        echo -e "${YELLOW}╰──────────────────────────────────────────────────────────────────────────────╯${NC}"
     fi
 }
 
 # Main installation function
 main() {
     echo
-    echo "🔧 FReview Global Installation Script"
-    echo "===================================="
-    print_status "Installing FReview Flask review tool globally on your system..."
-    print_status "After installation, 'freview' will be available from any directory."
+    echo -e "${BLUE}╭──────────────────────────────────────────────────────────────────────────────╮${NC}"
+    echo -e "${BLUE}│${NC}                    ${GREEN}🔧 FReview Global Installation${NC}                        ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}                   ${YELLOW}Flask Project Review Tool${NC}                            ${BLUE}│${NC}"
+    echo -e "${BLUE}╰──────────────────────────────────────────────────────────────────────────────╯${NC}"
+    echo
+    print_status "🚀 Installing FReview - Flask Project Review Tool"
+    echo
+    echo -e "${BLUE}┌─ Installation Plan ──────────────────────────────────────────────────────────┐${NC}"
+    echo -e "${BLUE}│${NC}   ✨ Install FReview globally on your system                              ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   🌍 Make 'freview' command available from any directory                  ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   🛠️  Configure PATH for seamless access                                  ${BLUE}│${NC}"
+    echo -e "${BLUE}└──────────────────────────────────────────────────────────────────────────────┘${NC}"
+    echo
+    print_status "🔍 Detecting best installation method..."
     echo
     
     # Try installation methods in order of preference
@@ -377,7 +424,10 @@ main() {
         fi
     fi
     
-    print_warning "uv installation failed, trying pipx..."
+    echo
+    echo -e "${YELLOW}┌─ Trying Alternative Method ──────────────────────────────────────────────────┐${NC}"
+    echo -e "${YELLOW}│${NC}   ⚠️ uv installation failed, trying pipx...                               ${YELLOW}│${NC}"
+    echo -e "${YELLOW}└──────────────────────────────────────────────────────────────────────────────┘${NC}"
     if install_freview_pipx; then
         if verify_installation; then
             show_usage
@@ -385,7 +435,10 @@ main() {
         fi
     fi
     
-    print_warning "pipx installation failed, trying pip..."
+    echo
+    echo -e "${YELLOW}┌─ Final Attempt ──────────────────────────────────────────────────────────────┐${NC}"
+    echo -e "${YELLOW}│${NC}   ⚠️ pipx installation failed, trying pip...                              ${YELLOW}│${NC}"
+    echo -e "${YELLOW}└──────────────────────────────────────────────────────────────────────────────┘${NC}"
     if install_freview_pip; then
         if verify_installation; then
             show_usage
@@ -393,22 +446,30 @@ main() {
         fi
     fi
     
-    print_error "All installation methods failed. Please install manually:"
     echo
-    echo "If you're in a virtual environment:"
-    echo "  pip install freview"
-    echo "  # or from source:"
-    echo "  pip install git+https://github.com/Chatelo/freview.git"
+    echo -e "${RED}╭──────────────────────────────────────────────────────────────────────────────╮${NC}"
+    echo -e "${RED}│${NC}                        ${RED}❌ Installation Failed${NC}                             ${RED}│${NC}"
+    echo -e "${RED}╰──────────────────────────────────────────────────────────────────────────────╯${NC}"
     echo
-    echo "If you're not in a virtual environment:"
-    echo "  1. Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh"
-    echo "  2. Install FReview: uv tool install freview"
-    echo "  3. Or use pip: pip install --user freview"
+    print_error "All automatic installation methods failed. Please try manual installation:"
     echo
-    echo "If you're getting '--user' install errors, you may be in a virtual environment"
-    echo "that doesn't allow user installs. Try activating/deactivating your virtual environment."
+    echo -e "${BLUE}┌─ Manual Installation Options ───────────────────────────────────────────────┐${NC}"
+    echo -e "${BLUE}│${NC}                                                                            ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}  ${YELLOW}If you're in a virtual environment:${NC}                                     ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}    pip install git+https://github.com/Chatelo/freview.git               ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}                                                                            ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}  ${YELLOW}If you're not in a virtual environment:${NC}                                ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}    1. Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh        ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}    2. Install FReview: uv tool install git+...freview.git               ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}    3. Or use pip: pip install --user git+...freview.git                 ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}                                                                            ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}  ${YELLOW}Getting '--user' install errors?${NC}                                       ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}    You may be in a virtual environment that doesn't allow user installs ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}    Try activating/deactivating your virtual environment.                ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}                                                                            ${BLUE}│${NC}"
+    echo -e "${BLUE}└──────────────────────────────────────────────────────────────────────────────┘${NC}"
     echo
-    echo "For help, visit: https://github.com/Chatelo/freview/issues"
+    echo -e "${YELLOW}🆘 Need help? Visit: ${BLUE}https://github.com/Chatelo/freview/issues${NC}"
     exit 1
 }
 
